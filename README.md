@@ -11,13 +11,32 @@ def main() {
     float b = 20.4; #float#
     float c = 0b10100.01101;
     unsigned float d = 0b10100.0110; #can only be positive#
-    signed float c = 0b10100.0110; #can only be negative#
-    string  = "Hello World"; #string#
-    bool  = true; #bool#
-    int  = 0b0101; #binary 10#
-    unsigned int = 0b0101; #binary 10#
-    signed int  = 0b1010; #binary -10#
-    int  = 0x4f92; #hexadecimal 20306#
+    signed float e = 0b10100.0110; #can only be negative#
+    string f = "Hello World"; #string#
+    bool g = true; #bool#
+    int h = 0b0101; #binary 10#
+    unsigned int i = 0b0101; #binary 10#
+    signed int j = 0b1010; #binary -10#
+    int k = 0x4f92; #hexadecimal 20306#
     print("Hello World");
 }
+```
+
+## Easy code example
+```
+#Main function
+def main():
+    #declaring variables
+    a = 10 #int
+    b = 20.4 #float
+    c = 0b10100.01101 #binary with a decimal
+    unsigned d = 0b10100.0110 #binary with a decimal that can only be positive
+    signed e = 0b10100.0110 #binary with a decimal that can only be negative
+    f = "Hello World" #string
+    g = true #bool
+    h = 0b0101 #binary 10
+    unsigned i = 0b0101 #binary 10
+    signed j = 0b1010 #binary -10
+    k = 0x4f92 #hexadecimal 20306
+    print("Hello World")
 ```
