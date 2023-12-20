@@ -1,0 +1,3 @@
+struct def main() {
+    int a == 10;
+}

@@ -8,15 +8,15 @@ The main feature of this language is that there are two modes, easy mode, fast m
 def main() {
     #declaring variables#
     int a = 10; #int#
-    float b = 20.4; #float#
-    float c = 0b10100.01101;
-    unsigned float d = 0b10100.0110; #can only be positive#
-    signed float e = 0b10100.0110; #can only be negative#
-    string f = "Hello World"; #string#
-    bool g = true; #bool#
+    flt b = 20.4; #float#
+    flt c = 0b10100.01101;
+    uns flt d = 0b10100.0110; #can only be positive#
+    sig flt e = 0b10100.0110; #can only be negative#
+    str f = "Hello World"; #string#
+    bl g = true; #bool#
     int h = 0b0101; #binary 10#
-    unsigned int i = 0b0101; #binary 10#
-    signed int j = 0b1010; #binary -10#
+    uns int i = 0b0101; #binary 10#
+    sig int j = 0b1010; #binary -10#
     int k = 0x4f92; #hexadecimal 20306#
     print("Hello World");
 }
@@ -30,13 +30,13 @@ def main():
     a = 10 #int
     b = 20.4 #float
     c = 0b10100.01101 #binary with a decimal
-    unsigned d = 0b10100.0110 #binary with a decimal that can only be positive
-    signed e = 0b10100.0110 #binary with a decimal that can only be negative
+    uns d = 0b10100.0110 #binary with a decimal that can only be positive
+    sig e = 0b10100.0110 #binary with a decimal that can only be negative
     f = "Hello World" #string
     g = true #bool
     h = 0b0101 #binary 10
-    unsigned i = 0b0101 #binary 10
-    signed j = 0b1010 #binary -10
+    uns i = 0b0101 #binary 10
+    sig j = 0b1010 #binary -10
     k = 0x4f92 #hexadecimal 20306
     print("Hello World")
 ```
