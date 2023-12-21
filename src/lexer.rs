@@ -26,6 +26,12 @@ fn advance(code: &str) -> Option<char> {
     }
 }
 
+fn reduce(amount: usize) {
+    unsafe {
+        COUNTER -= amount;
+    }
+}
+
 pub fn tokenize(code: &str) {
     let mut commented = false;
     while let Some(c) = advance(code) {
@@ -101,6 +107,20 @@ pub fn tokenize(code: &str) {
                         add_token(Types::EqualTo);
                     } else {
                         add_token(Types::Equal);
+                    }
+                }
+                's' => {
+                    if let Some('t') = advance(code) {
+                        if let Some('r') = advance(code) {
+                            if let Some('u') = advance(code) {
+                                if let Some('c') = advance(code) {
+                                    if let Some('t') = advance(code) {
+                                        add_token(Types::Struct);
+                                    }
+                                }
+                            }
+                            add_token(Types::String);
+                        }
                     }
                 }
                 _ => {}
