@@ -19,7 +19,7 @@ pub enum TYPE {
     // Single Character
     Dot,
     Comma,
-    Space,
+    WhiteSpace,
     Equal,
     LBracket,
     RBracket,
@@ -37,7 +37,9 @@ pub enum TYPE {
     VarDec,
 
     //Varrying values
-    Identifier
+    Identifier,
+    Float,
+    Int
 }
 
 pub struct TOKEN {
@@ -61,6 +63,7 @@ pub fn tokenize(code: &str) -> Vec<TOKEN> {
     let mut counter: usize = 0;
     let mut tokens: Vec<TOKEN> = Vec::new();
     let mut id_counter: usize = 0;
+    let mut is_float: bool = false;
     // Iterate over the characters of the code string
     while counter < code.len() {
         let c: char = get_char(code, counter);
@@ -68,7 +71,7 @@ pub fn tokenize(code: &str) -> Vec<TOKEN> {
         match c {
             '+' => {
                 let next_str = get_str(code, counter, counter + 1);
-                if next_str == "+= " {
+                if next_str == "+=" {
                     tokens.push(TOKEN {
                         kind: TYPE::PlusEquals,
                         value: next_str,
@@ -83,7 +86,7 @@ pub fn tokenize(code: &str) -> Vec<TOKEN> {
             },
             '-' => {
                 let next_str = get_str(code, counter, counter + 1);
-                if next_str == "-= " {
+                if next_str == "-=" {
                     tokens.push(TOKEN {
                         kind: TYPE::MinusEquals,
                         value: next_str,
@@ -98,7 +101,7 @@ pub fn tokenize(code: &str) -> Vec<TOKEN> {
             },
             '/' => {
                 let next_str = get_str(code, counter, counter + 1);
-                if next_str == "/= " {
+                if next_str == "/=" {
                     tokens.push(TOKEN {
                         kind: TYPE::DivideEquals,
                         value: next_str,
@@ -113,7 +116,7 @@ pub fn tokenize(code: &str) -> Vec<TOKEN> {
             },
             '*' => {
                 let next_str = get_str(code, counter, counter + 1);
-                if next_str == "*= " {
+                if next_str == "*=" {
                     tokens.push(TOKEN {
                         kind: TYPE::MultiplyEquals,
                         value: next_str,
@@ -128,7 +131,7 @@ pub fn tokenize(code: &str) -> Vec<TOKEN> {
             },
             '>' => {
                 let next_str = get_str(code, counter, counter + 1);
-                if next_str == ">= " {
+                if next_str == ">=" {
                     tokens.push(TOKEN {
                         kind: TYPE::BiggerEquals,
                         value: next_str,
@@ -143,7 +146,7 @@ pub fn tokenize(code: &str) -> Vec<TOKEN> {
             },
             '<' => {
                 let next_str = get_str(code, counter, counter + 1);
-                if next_str == "<= " {
+                if next_str == "<=" {
                     tokens.push(TOKEN {
                         kind: TYPE::SmallerEquals,
                         value: next_str,
@@ -164,13 +167,18 @@ pub fn tokenize(code: &str) -> Vec<TOKEN> {
                 kind: TYPE::Comma,
                 value: c.to_string(),
             }),
-            ' ' => tokens.push(TOKEN {
-                kind: TYPE::Space,
-                value: c.to_string(),
-            }),
+            ' ' => {
+                while get_char(code, counter + 1) == ' ' {
+                    counter += 1;
+                }
+                tokens.push(TOKEN {
+                    kind: TYPE::WhiteSpace,
+                    value: c.to_string(),
+                });
+            },
             's' => {
                 let next_str = get_str(code, counter, counter + 2);
-                if next_str == "str " {
+                if next_str == "str" {
                     tokens.push(TOKEN {
                         kind: TYPE::StringType,
                         value: next_str,
@@ -184,7 +192,7 @@ pub fn tokenize(code: &str) -> Vec<TOKEN> {
             }),
             '=' => {
                 let next_str = get_str(code, counter, counter + 1);
-                if next_str == "== " {
+                if next_str == "==" {
                     tokens.push(TOKEN {
                         kind: TYPE::EqualTo,
                         value: next_str,
@@ -230,7 +238,7 @@ pub fn tokenize(code: &str) -> Vec<TOKEN> {
             }),
             'i' => {
                 let next_str = get_str(code, counter, counter + 2);
-                if next_str == "int " {
+                if next_str == "int" {
                     tokens.push(TOKEN {
                         kind: TYPE::IntType,
                         value: next_str,
@@ -258,9 +266,39 @@ pub fn tokenize(code: &str) -> Vec<TOKEN> {
                     counter += 2;
                 }
             }
+            '0'..='9'=> {
+                while get_char(code, counter + id_counter) != ',' && get_char(code, counter + id_counter) != '}' && get_char(code, counter + id_counter) != '{' && get_char(code, counter + id_counter) != '[' && get_char(code, counter + id_counter) != ']' && get_char(code, counter + id_counter) != '(' && get_char(code, counter + id_counter) != ')' && get_char(code, counter + id_counter) != ';' && get_char(code, counter + id_counter) != ':' && get_char(code, counter + id_counter) != '/' && get_char(code, counter + id_counter) != ' ' {
+                    value.push(get_char(code, counter + id_counter));
+                    if get_char(code, counter + id_counter) == '.' {
+                        is_float = true;
+                    }
+                    id_counter += 1;
+                }
+                if is_float {
+                    tokens.push(TOKEN {
+                        kind: TYPE::Float,
+                        value: value,
+                    });
+                } else {
+                    tokens.push(TOKEN {
+                        kind: TYPE::Int,
+                        value: value,
+                    });
+                }
+                counter += id_counter - 1;
+                is_float = false;
+                value = String::new();
+                id_counter = 0;
+            }
             _ => {
-                if tokens[counter - 1].value == " " || tokens[counter - 1].value == "." || tokens[counter - 1].value == "," || tokens[counter - 1].value == "{" || tokens[counter - 1].value == "}" || tokens[counter - 1].value == "[" || tokens[counter - 1].value == "]" || tokens[counter - 1].value == "(" || tokens[counter - 1].value == ")" || tokens[counter - 1].value == ";" {
-                    while get_char(code, counter + id_counter) != '.' && get_char(code, counter + id_counter) != ',' && get_char(code, counter + id_counter) != '}' && get_char(code, counter + id_counter) != '{' && get_char(code, counter + id_counter) != '[' && get_char(code, counter + id_counter) != ']' && get_char(code, counter + id_counter) != '(' && get_char(code, counter + id_counter) != ')' && get_char(code, counter + id_counter) != ';' && get_char(code, counter + id_counter) != ':' && get_char(code, counter + id_counter) != '/' {
+
+                    if counter != 0 && get_char(code, counter - 1).is_alphabetic() {
+                        while counter != 0 && get_char(code, counter - 1).is_alphabetic() {
+                            counter -= 1;
+                        } 
+                       tokens.pop();
+                    }
+                    while get_char(code, counter + id_counter) != '.' && get_char(code, counter + id_counter) != ',' && get_char(code, counter + id_counter) != '}' && get_char(code, counter + id_counter) != '{' && get_char(code, counter + id_counter) != '[' && get_char(code, counter + id_counter) != ']' && get_char(code, counter + id_counter) != '(' && get_char(code, counter + id_counter) != ')' && get_char(code, counter + id_counter) != ';' && get_char(code, counter + id_counter) != ':' && get_char(code, counter + id_counter) != '/' && get_char(code, counter + id_counter) != ' ' {
                         value.push(get_char(code, counter + id_counter));
                         id_counter += 1;
                     }
@@ -268,11 +306,10 @@ pub fn tokenize(code: &str) -> Vec<TOKEN> {
                         kind: TYPE::Identifier,
                         value: value.clone(),
                     });
-                    counter += id_counter;
+                    counter += id_counter - 1;
                     id_counter = 0;
+                    value = String::new();
                 }
-                
-            }
         }
         counter += 1;
     }
